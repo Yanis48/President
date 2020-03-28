@@ -1,0 +1,71 @@
+package president;
+
+import president.carte.Carte;
+import president.carte.Valeur;
+import president.pile.Pile;
+
+public class VerificateurCarte {
+	private Carte carte;
+	private Pile pile;
+	private boolean valide = false;
+	private boolean pileReset = false;
+	private String messageErreur = null;
+	
+	public VerificateurCarte(Carte carte, Pile pile) {
+		this.carte = carte;
+		this.pile = pile;
+	}
+	
+	public void verifier() {
+		int prevCarteIndex = this.pile.getCartes().size() - 1;
+		
+		// Vérifier si la pile n'est pas vide
+		if (this.pile.getCartes().size() > 0) {
+			// Vérifier si la valeur de la carte est supérieure à la précédente
+			if (this.carte.getValeur().compareTo(this.pile.getCartes().get(prevCarteIndex).getValeur()) > 0) {
+				// Vérifier si les valeurs des 2 cartes précédentes ne sont pas égales
+				if (this.pile.getCartes().size() == 1 || !this.pile.getCartes().get(prevCarteIndex).getValeur().equals(this.pile.getCartes().get(prevCarteIndex - 1).getValeur())) {
+					this.valide = true;
+					this.verifierDeux();
+				} else {
+					this.messageErreur = Messages.ERREUR_PAS_EGALE;
+				}
+			// Vérifier si la valeur de la carte est égale à la précédente
+			} else if (this.carte.getValeur().compareTo(this.pile.getCartes().get(prevCarteIndex).getValeur()) == 0) {
+				this.valide = true;
+				this.verifierDeux();
+				// Vérifier si les valeurs des 3 cartes précédentes sont égales
+				if (this.pile.getCartes().size() >= 3 && this.pile.getCartes().get(prevCarteIndex).getValeur().equals(this.pile.getCartes().get(prevCarteIndex - 1).getValeur()) && this.pile.getCartes().get(prevCarteIndex).getValeur().equals(this.pile.getCartes().get(prevCarteIndex - 2).getValeur())) {
+					this.pileReset = true;
+				}
+			} else {
+				this.messageErreur = Messages.ERREUR_INFERIEURE;
+			}
+		} else {
+			this.valide = true;
+			this.verifierDeux();
+		}
+	}
+	
+	/*
+	 * Vérifie si la valeur de la carte est égale à 2
+	 * Réinitialise la pile si la vérification réussit
+	 */
+	private void verifierDeux() {
+		if (this.carte.getValeur().equals(Valeur.DEUX)) {
+			this.pileReset = true;
+		}
+	}
+	
+	public boolean isValide() {
+		return this.valide;
+	}
+	
+	public boolean isPileReset() {
+		return this.pileReset;
+	}
+	
+	public String getMessageErreur() {
+		return this.messageErreur;
+	}
+}
