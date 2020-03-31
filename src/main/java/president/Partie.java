@@ -20,6 +20,7 @@ public class Partie {
 	private Pile pile;
 	private boolean premierePartie;
 	private Joueur joueurMain;
+	private Carte derniereCartePlacee;
 	
 	public Partie(boolean premierePartie) {
 		this.paquet = new Paquet(this);
@@ -35,7 +36,7 @@ public class Partie {
 		
 		if ((inNombreJoueurs < 2) || (inNombreJoueurs > 6)) {
 			System.out.println(Messages.ERREUR_NOMBRE_JOUEURS);
-			initNombreJoueurs();
+			this.initNombreJoueurs();
 		} else {
 			this.nombreJoueurs = inNombreJoueurs;
 		}
@@ -78,7 +79,7 @@ public class Partie {
 	public void lancer() {
 		int j = this.joueurs.indexOf(this.joueurMain);
 		do {
-			this.choisirCarte(this.joueurs.get(j));			
+			this.choisirCarte(this.joueurs.get(j));
 			if (j == this.joueurs.size() - 1) {
 				j = 0;
 			} else {
@@ -90,8 +91,11 @@ public class Partie {
 	
 	@SuppressWarnings("resource")
 	private void choisirCarte(Joueur joueur) {
-		// Afficher la pile
+		Mode mode = Mode.SIMPLE;
+		
+		// Si la pile n'est pas vide, afficher la pile
 		if (!this.pile.isVide()) {
+			System.out.println();
 			System.out.println("Pile");
 			this.pile.afficher();
 			System.out.println();
@@ -102,39 +106,47 @@ public class Partie {
 		joueur.getDeck().afficher();
 		System.out.println();
 		
+		// Si la pile est vide, choisir le mode
+		if (this.pile.isVide()) {
+			mode = this.choisirMode();
+		}
+		
 		// Saisir la carte à choisir
 		Scanner scanner = new Scanner(System.in);
 		
 		Carte carte = null;
 		boolean found = false;
+		ArrayList<Carte> cartes = new ArrayList<Carte>();
 		while (!found) {
 			System.out.print("Carte choisie : ");
 			String valeurCarte = scanner.nextLine();
 			String messageErreur = Messages.ERREUR_PAS_DANS_DECK;
 			
 			// Vérifier si le joueur passe son tour
-			if (valeurCarte.isBlank()) {
+			if (valeurCarte.equals("0")) {
 				found = true;
+				this.derniereCartePlacee = null;
 			}
 			
 			Iterator<Carte> itCartes = joueur.getDeck().getCartes().iterator();
 			
 			while (itCartes.hasNext() && !found) {
-				System.out.println("test");
 				carte = itCartes.next();
 				if (carte.getValeur().getSymbole().equals(valeurCarte)) {
-					VerificateurCarte verif = new VerificateurCarte(carte, this.pile);
+					cartes.add(carte);
+					VerificateurCarte verif = new VerificateurCarte(this.pile, mode, this.derniereCartePlacee, cartes);
 					verif.verifier();
 					if (verif.isValide()) {
 						found = true;
+						this.derniereCartePlacee = carte;
 						
 						// Enlever la carte du deck du joueur
-						joueur.getDeck().enleverCarte(carte);
+						cartes.forEach(c -> joueur.getDeck().enleverCarte(c));
 						
 						// Ajouter la carte dans la pile
-						this.pile.ajouterCarte(carte);
+						cartes.forEach(c -> this.pile.ajouterCarte(c));
 						
-						if (verif.isPileReset()) {							
+						if (verif.isPileReset()) {
 							this.pile.reinitialiser();
 							this.joueurMain = joueur;
 						}
@@ -148,6 +160,22 @@ public class Partie {
 				System.out.println(messageErreur);
 			}
 		}
+	}
+	
+	@SuppressWarnings("resource")
+	private Mode choisirMode() {
+		Scanner scanner = new Scanner(System.in);
+		System.out.print("Mode choisi : ");
+		int modeId = scanner.nextInt();
+		
+		// Vérifier si le mode choisi existe
+		for (Mode mode : Mode.values()) {
+			if (mode.getId() == modeId) {
+				return mode;
+			}
+		}
+		System.out.println(Messages.ERREUR_MODE_CARTES);
+		return this.choisirMode();
 	}
 	
 	public int getNombreJoueurs() {
