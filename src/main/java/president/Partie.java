@@ -20,7 +20,9 @@ public class Partie {
 	private Pile pile;
 	private boolean premierePartie;
 	private Joueur joueurMain;
+	private Mode mode = Mode.SIMPLE;
 	private Carte derniereCartePlacee;
+	private int nombreToursPasses;
 	
 	public Partie(boolean premierePartie) {
 		this.paquet = new Paquet(this);
@@ -78,6 +80,7 @@ public class Partie {
 	
 	public void lancer() {
 		int j = this.joueurs.indexOf(this.joueurMain);
+		
 		do {
 			this.choisirCarte(this.joueurs.get(j));
 			if (j == this.joueurs.size() - 1) {
@@ -91,7 +94,11 @@ public class Partie {
 	
 	@SuppressWarnings("resource")
 	private void choisirCarte(Joueur joueur) {
-		Mode mode = Mode.SIMPLE;
+		// Vérifier si tous les joueurs ont passé leur tour depuis la dernière carte posée
+		if (this.nombreToursPasses == this.joueurs.size() - 1) {
+			this.pile.reinitialiser();
+			System.out.println(Messages.INFO_PILE_RESET);
+		}
 		
 		// Si la pile n'est pas vide, afficher la pile
 		if (!this.pile.isVide()) {
@@ -108,7 +115,7 @@ public class Partie {
 		
 		// Si la pile est vide, choisir le mode
 		if (this.pile.isVide()) {
-			mode = this.choisirMode();
+			this.mode = this.choisirMode();
 		}
 		
 		// Saisir la carte à choisir
@@ -116,6 +123,7 @@ public class Partie {
 		
 		Carte carte = null;
 		boolean found = false;
+		int foundCount = 0;
 		ArrayList<Carte> cartes = new ArrayList<Carte>();
 		while (!found) {
 			System.out.print("Carte choisie : ");
@@ -126,6 +134,7 @@ public class Partie {
 			if (valeurCarte.equals("0")) {
 				found = true;
 				this.derniereCartePlacee = null;
+				this.nombreToursPasses += 1;
 			}
 			
 			Iterator<Carte> itCartes = joueur.getDeck().getCartes().iterator();
@@ -133,25 +142,30 @@ public class Partie {
 			while (itCartes.hasNext() && !found) {
 				carte = itCartes.next();
 				if (carte.getValeur().getSymbole().equals(valeurCarte)) {
+					foundCount += 1;
 					cartes.add(carte);
-					VerificateurCarte verif = new VerificateurCarte(this.pile, mode, this.derniereCartePlacee, cartes);
-					verif.verifier();
-					if (verif.isValide()) {
-						found = true;
-						this.derniereCartePlacee = carte;
-						
-						// Enlever la carte du deck du joueur
-						cartes.forEach(c -> joueur.getDeck().enleverCarte(c));
-						
-						// Ajouter la carte dans la pile
-						cartes.forEach(c -> this.pile.ajouterCarte(c));
-						
-						if (verif.isPileReset()) {
-							this.pile.reinitialiser();
-							this.joueurMain = joueur;
+					if (foundCount == this.mode.getId()) {
+						VerificateurCarte verif = new VerificateurCarte(this.pile, this.mode, this.derniereCartePlacee, cartes);
+						verif.verifier();
+						if (verif.isValide()) {
+							found = true;
+							this.derniereCartePlacee = carte;
+							this.nombreToursPasses = 0;
+							
+							// Enlever la carte du deck du joueur
+							cartes.forEach(c -> joueur.getDeck().enleverCarte(c));
+							
+							// Ajouter la carte dans la pile
+							cartes.forEach(c -> this.pile.ajouterCarte(c));
+							
+							if (verif.isPileReset()) {
+								this.pile.reinitialiser();
+								System.out.println(Messages.INFO_PILE_RESET);
+								this.joueurMain = joueur;
+							}
+						} else {
+							messageErreur = verif.getMessageErreur();
 						}
-					} else {
-						messageErreur = verif.getMessageErreur();
 					}
 				}
 			}

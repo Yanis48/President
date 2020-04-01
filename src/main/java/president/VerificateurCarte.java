@@ -30,7 +30,7 @@ public class VerificateurCarte {
 			// Vérifier si la valeur de la carte est supérieure à la précédente
 			if (this.cartes.get(0).getValeur().compareTo(this.pile.getCartes().get(prevCarteIndex).getValeur()) > 0) {
 				// Vérifier si les valeurs des 2 cartes précédentes ne sont pas égales
-				if (this.derniereCartePlacee == null || this.pile.getCartes().size() == 1 || !this.pile.getCartes().get(prevCarteIndex).getValeur().equals(this.pile.getCartes().get(prevCarteIndex - 1).getValeur())) {
+				if (this.mode != Mode.SIMPLE || this.derniereCartePlacee == null || this.pile.getCartes().size() == 1 || !this.pile.getCartes().get(prevCarteIndex).getValeur().equals(this.pile.getCartes().get(prevCarteIndex - 1).getValeur())) {
 					this.valide = true;
 					this.verifierDeux();
 				} else {
@@ -41,7 +41,7 @@ public class VerificateurCarte {
 				this.valide = true;
 				this.verifierDeux();
 				// Vérifier si les valeurs des 3 cartes précédentes sont égales
-				if (this.pile.getCartes().size() >= 3 && this.pile.getCartes().get(prevCarteIndex).getValeur().equals(this.pile.getCartes().get(prevCarteIndex - 1).getValeur()) && this.pile.getCartes().get(prevCarteIndex).getValeur().equals(this.pile.getCartes().get(prevCarteIndex - 2).getValeur())) {
+				if (this.mode != Mode.SIMPLE || this.pile.getCartes().size() >= 3 && this.pile.getCartes().get(prevCarteIndex).getValeur().equals(this.pile.getCartes().get(prevCarteIndex - 1).getValeur()) && this.pile.getCartes().get(prevCarteIndex).getValeur().equals(this.pile.getCartes().get(prevCarteIndex - 2).getValeur())) {
 					this.pileReset = true;
 				}
 			} else {
