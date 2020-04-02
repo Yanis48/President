@@ -44,19 +44,20 @@ public class Paquet extends Pile {
 		// Si le nombre de cartes par joueur ne tombe pas rond, on donne une carte en plus
 		nombreCartesParJoueur += (NOMBRE_CARTES % nombreJoueurs != 0) ? 1 : 0;
 		
-		for (int joueur = 0; joueur < nombreJoueurs; joueur++) {
-			Deck deck = this.partie.getJoueurs().get(joueur).getDeck();
-			
-			for (int carte = 0; carte < nombreCartesParJoueur; carte++) {
-				int index = carte + (nombreCartesParJoueur * joueur);
+		for (int carte = 0; carte < nombreCartesParJoueur; carte++) {
+			for (int joueur = 0; joueur < nombreJoueurs; joueur++) {
+				Deck deck = this.partie.getJoueurs().get(joueur).getDeck();
+				int index = joueur + (nombreJoueurs * carte);
+				
 				if (index < NOMBRE_CARTES) {
 					deck.ajouterCarte(this.cartes.get(index));
 				}
+				
+				// Tri du deck par valeur
+				deck.getCartes().sort(Comparator.comparing(Carte::getValeur));
 			}
-			
-			// Tri du deck par valeur
-			deck.getCartes().sort(Comparator.comparing(Carte::getValeur));
 		}
+		
 		System.out.println(Messages.INFO_DISTRIBUE);
 		
 		/*

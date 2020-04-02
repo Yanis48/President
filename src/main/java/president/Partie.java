@@ -123,8 +123,7 @@ public class Partie {
 		
 		Carte carte = null;
 		boolean found = false;
-		int foundCount = 0;
-		ArrayList<Carte> cartes = new ArrayList<Carte>();
+		
 		while (!found) {
 			System.out.print("Carte choisie : ");
 			String valeurCarte = scanner.nextLine();
@@ -138,6 +137,9 @@ public class Partie {
 			}
 			
 			Iterator<Carte> itCartes = joueur.getDeck().getCartes().iterator();
+			
+			int foundCount = 0;
+			ArrayList<Carte> cartes = new ArrayList<Carte>();
 			
 			while (itCartes.hasNext() && !found) {
 				carte = itCartes.next();
@@ -180,7 +182,7 @@ public class Partie {
 	private Mode choisirMode() {
 		Scanner scanner = new Scanner(System.in);
 		System.out.print("Mode choisi : ");
-		int modeId = scanner.nextInt();
+		int modeId = scanner.nextInt(Character.MAX_RADIX);
 		
 		// Vérifier si le mode choisi existe
 		for (Mode mode : Mode.values()) {
