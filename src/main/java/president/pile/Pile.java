@@ -29,7 +29,6 @@ public class Pile {
 		for (Carte carte : this.cartes) {
 			System.out.print("[" + carte.getValeur().getSymbole() + carte.getCouleur().getSymbole() + "] ");
 		}
-		System.out.println();
 	}
 	
 	public void afficherCarte(int index) {

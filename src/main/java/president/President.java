@@ -6,17 +6,10 @@ public class President {
 		Partie partie = new Partie(true);
 		
 		/*
-		 * Initialisation de la partie
-		 */
-		partie.initNombreJoueurs();
-		partie.initJoueurs();
-		partie.getPaquet().melanger();
-		partie.getPaquet().distribuer();
-		partie.initPremierJoueur();
-		
-		/*
 		 * Lancement de la partie
 		 */
 		partie.lancer();
+		
+		// TODO si un joueur a plus aucune carte, le retirer de this.joueurs & donner rôle
 	}
 }

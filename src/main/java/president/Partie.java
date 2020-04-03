@@ -14,8 +14,9 @@ import president.pile.Paquet;
 import president.pile.Pile;
 
 public class Partie {
-	private int nombreJoueurs;
-	private List<Joueur> joueurs = new ArrayList<Joueur>();
+	private static int nombreJoueurs;
+	private static List<Joueur> joueurs = new ArrayList<Joueur>();
+	private List<Joueur> joueursPartie = new ArrayList<Joueur>();
 	private Paquet paquet;
 	private Pile pile;
 	private boolean premierePartie;
@@ -30,8 +31,29 @@ public class Partie {
 		this.premierePartie = premierePartie;
 	}
 	
+	public void lancer() {
+		if (this.isPremierePartie()) {
+			// Initialisation du nombre de joueurs
+			this.initNombreJoueurs();
+			// Initialisation des noms des joueurs
+			this.initJoueurs();
+		}
+		// Copie de tous les joueurs dans les joueurs actifs de la partie
+		this.joueursPartie.addAll(joueurs);
+		
+		// Mélange et distribution du paquet
+		this.getPaquet().melanger();
+		this.getPaquet().distribuer();
+		
+		// Détermination du joueur à avoir la main
+		this.initPremierJoueur();
+		
+		// Lancement des tours des joueurs
+		this.toursJoueurs();
+	}
+	
 	@SuppressWarnings("resource")
-	public void initNombreJoueurs() {
+	private void initNombreJoueurs() {
 		System.out.print("Nombre de joueurs : ");
 		Scanner scanner = new Scanner(System.in);
 		int inNombreJoueurs = scanner.nextInt();
@@ -40,31 +62,48 @@ public class Partie {
 			System.out.println(Messages.ERREUR_NOMBRE_JOUEURS);
 			this.initNombreJoueurs();
 		} else {
-			this.nombreJoueurs = inNombreJoueurs;
+			nombreJoueurs = inNombreJoueurs;
 		}
 	}
 	
 	@SuppressWarnings("resource")
-	public void initJoueurs() {		        
+	private void initJoueurs() {		        
 		Scanner scanner = new Scanner(System.in);
 		String nom;
 		
-		for (int i = 0; i < this.nombreJoueurs; i++) {
+		for (int i = 0; i < nombreJoueurs; i++) {
 			System.out.print("Nom du joueur " + (i + 1) + " : ");
 			nom = scanner.nextLine();
 			
-			if (nom.length() <= 8) {
+			if (this.isNomValide(nom) && this.isNomUnique(nom)) {
 				Joueur joueur = new Joueur(nom);
-				this.joueurs.add(joueur);
+				joueurs.add(joueur);
 			} else {
-				System.out.println(Messages.ERREUR_NOM_JOUEUR);
 				i--;
 			}
 		}
 	}
 	
-	public void initPremierJoueur() {
-		this.joueurs.forEach(joueur -> {
+	private boolean isNomValide(String nom) {
+		if (nom.length() > 8 || nom.isBlank()) {
+			System.out.println(Messages.ERREUR_NOM_JOUEUR);
+			return false;
+		}
+		return true;
+	}
+	
+	private boolean isNomUnique(String nom) {
+		for (Joueur joueur : joueurs) {
+			if (joueur.getNom().equals(nom)) {
+				System.out.println(Messages.ERREUR_NOM_PAS_UNIQUE);
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	private void initPremierJoueur() {
+		joueurs.forEach(joueur -> {
 			if (this.isPremierePartie()) {
 				Carte dameCoeur = new Carte(Valeur.DAME, Couleur.COEUR);
 				if (joueur.getDeck().contient(dameCoeur)) {
@@ -78,33 +117,34 @@ public class Partie {
 		});
 	}
 	
-	public void lancer() {
-		int j = this.joueurs.indexOf(this.joueurMain);
+	private void toursJoueurs() {
+		int j = this.joueursPartie.indexOf(this.joueurMain);
 		
 		do {
-			this.choisirCarte(this.joueurs.get(j));
-			if (j == this.joueurs.size() - 1) {
+			this.choisirCarte(joueurs.get(j));
+			if (j == this.joueursPartie.size() - 1) {
 				j = 0;
 			} else {
 				j++;
 			}
 		} while (!this.pile.isVide());
-		this.lancer();
+		this.toursJoueurs();
 	}
 	
 	@SuppressWarnings("resource")
 	private void choisirCarte(Joueur joueur) {
 		// Vérifier si tous les joueurs ont passé leur tour depuis la dernière carte posée
-		if (this.nombreToursPasses == this.joueurs.size() - 1) {
+		if (this.nombreToursPasses == this.joueursPartie.size() - 1) {
 			this.pile.reinitialiser();
 			System.out.println(Messages.INFO_PILE_RESET);
 		}
+		System.out.println();
 		
 		// Si la pile n'est pas vide, afficher la pile
 		if (!this.pile.isVide()) {
-			System.out.println();
 			System.out.println("Pile");
 			this.pile.afficher();
+			System.out.println();
 			System.out.println();
 		}
 		
@@ -195,15 +235,15 @@ public class Partie {
 	}
 	
 	public int getNombreJoueurs() {
-		return this.nombreJoueurs;
+		return nombreJoueurs;
 	}
 	
 	public List<Joueur> getJoueurs() {
-		return this.joueurs;
+		return joueurs;
 	}
 	
 	public Joueur getJoueur(int index) {
-		return this.joueurs.get(index);
+		return joueurs.get(index);
 	}
 	
 	public Paquet getPaquet() {
