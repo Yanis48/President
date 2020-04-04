@@ -3,7 +3,8 @@ package president;
 public enum Mode {
 	SIMPLE(1),
 	DOUBLE(2),
-	TRIPLE(3);
+	TRIPLE(3),
+	QUADRUPLE(4);
 	
 	private int id;
 	

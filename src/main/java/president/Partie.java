@@ -56,13 +56,13 @@ public class Partie {
 	private void initNombreJoueurs() {
 		System.out.print("Nombre de joueurs : ");
 		Scanner scanner = new Scanner(System.in);
-		int inNombreJoueurs = scanner.nextInt();
+		int nombre = scanner.nextInt();
 		
-		if ((inNombreJoueurs < 2) || (inNombreJoueurs > 6)) {
+		if ((nombre < 2) || (nombre > 6)) {
 			System.out.println(Messages.ERREUR_NOMBRE_JOUEURS);
 			this.initNombreJoueurs();
 		} else {
-			nombreJoueurs = inNombreJoueurs;
+			nombreJoueurs = nombre;
 		}
 	}
 	

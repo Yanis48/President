@@ -50,15 +50,26 @@ public class VerificateurCarte {
 		} else {
 			this.valide = true;
 			this.verifierDeux();
+			this.verifierQuadruple();
 		}
 	}
 	
 	/*
 	 * Vérifie si la valeur de la carte est égale à 2
-	 * Réinitialise la pile si la vérification réussit
+	 * Réinitialise la pile en cas de succès
 	 */
 	private void verifierDeux() {
 		if (this.cartes.get(0).getValeur().equals(Valeur.DEUX)) {
+			this.pileReset = true;
+		}
+	}
+	
+	/*
+	 * Vérifie si 4 cartes sont posées en même temps
+	 * Réinitialise la pile en cas de succès
+	 */
+	private void verifierQuadruple() {
+		if (this.mode == Mode.QUADRUPLE) {
 			this.pileReset = true;
 		}
 	}
