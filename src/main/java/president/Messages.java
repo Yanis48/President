@@ -12,4 +12,5 @@ public class Messages {
 	public static final String INFO_MELANGE = "[INFO] Le paquet a été mélangé.";
 	public static final String INFO_DISTRIBUE = "[INFO] Le paquet a été distribué.";
 	public static final String INFO_PILE_RESET = "[INFO] La pile a été réinitialisée.";
+	public static final String INFO_FIN_PARTIE = "[INFO] La partie est terminée !";
 }

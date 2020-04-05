@@ -50,6 +50,9 @@ public class Partie {
 		
 		// Lancement des tours des joueurs
 		this.toursJoueurs();
+		
+		// Finir la partie
+		this.finirPartie();
 	}
 	
 	@SuppressWarnings("resource")
@@ -120,12 +123,33 @@ public class Partie {
 	private void toursJoueurs() {
 		int j = this.joueursPartie.indexOf(this.joueurMain);
 		
+		// Tant que la pile n'est pas vide, faire le tour des joueurs
 		do {
-			this.choisirCarte(joueurs.get(j));
-			if (j == this.joueursPartie.size() - 1) {
-				j = 0;
+			Joueur joueur = this.joueursPartie.get(j);
+			
+			// S'il ne reste qu'un seul joueur dans la partie
+			if (this.joueursPartie.size() == 1) {
+				return;
+			}
+			
+			// Choix et vérification de la carte à placer
+			this.choisirCarte(joueur);
+			
+			// Si le joueur est toujours actif dans la partie
+			if (this.joueursPartie.contains(joueur)) {
+				if (j == this.joueursPartie.size() - 1) {
+					j = 0;
+				} else {
+					j++;
+				}
+			// Si le joueur n'est plus actif dans la partie
 			} else {
-				j++;
+				// Si le joueur est le président, le joueur suivant a la main
+				if (joueur.getRole() == Role.PRESIDENT) {
+					this.joueurMain = (j == this.joueursPartie.size()) ? this.joueursPartie.get(0) : this.joueursPartie.get(j);
+				} else if (j == this.joueursPartie.size()) {
+					j = 0;
+				}
 			}
 		} while (!this.pile.isVide());
 		this.toursJoueurs();
@@ -216,6 +240,13 @@ public class Partie {
 				System.out.println(messageErreur);
 			}
 		}
+		
+		// Si le deck du joueur est vide, lui donner un rôle et le retirer des joueurs actifs
+		if (joueur.getDeck().isVide()) {
+			this.donnerRole(joueur);
+			System.out.println("[INFO] " + joueur.getNom() + " a terminé la partie en étant " + joueur.getRole());
+			this.joueursPartie.remove(joueur);
+		}
 	}
 	
 	@SuppressWarnings("resource")
@@ -232,6 +263,26 @@ public class Partie {
 		}
 		System.out.println(Messages.ERREUR_MODE_CARTES);
 		return this.choisirMode();
+	}
+	
+	private void donnerRole(Joueur joueur) {
+		int joueursRestants = this.joueursPartie.size();
+		
+		// Si le joueur est le premier à finir
+		if (this.getNombreJoueurs() - joueursRestants == 0) {
+			joueur.setRole(Role.PRESIDENT);
+			this.pile.reinitialiser();
+			System.out.println(Messages.INFO_PILE_RESET);
+		}
+	}
+	
+	private void finirPartie() {
+		System.out.println(Messages.INFO_FIN_PARTIE);
+		
+		// Affichage des rôles des joueurs
+		joueurs.forEach(joueur -> {
+			System.out.println(joueur.getNom() + " : " + joueur.getRole());
+		});
 	}
 	
 	public int getNombreJoueurs() {
