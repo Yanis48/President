@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
+import com.google.common.collect.Lists;
+
 import president.carte.Carte;
 import president.carte.Couleur;
 import president.carte.Valeur;
@@ -129,6 +131,7 @@ public class Partie {
 			
 			// S'il ne reste qu'un seul joueur dans la partie
 			if (this.joueursPartie.size() == 1) {
+				this.joueursPartie.get(0).setRole(Role.TROUDUC);
 				return;
 			}
 			
@@ -137,8 +140,10 @@ public class Partie {
 			
 			// Si le joueur est toujours actif dans la partie
 			if (this.joueursPartie.contains(joueur)) {
+				// Si le joueur est le dernier de la liste, revenir au premier joueur
 				if (j == this.joueursPartie.size() - 1) {
 					j = 0;
+				// Sinon, aller au joueur suivant
 				} else {
 					j++;
 				}
@@ -273,6 +278,35 @@ public class Partie {
 			joueur.setRole(Role.PRESIDENT);
 			this.pile.reinitialiser();
 			System.out.println(Messages.INFO_PILE_RESET);
+		} else {
+			int indexRole = 0;
+			
+			// TODO optimiser ce code
+			
+			switch (this.getNombreJoueurs()) {
+			case 2:
+				// PRESIDENT, TROUDUC
+				indexRole = (this.getNombreJoueurs() - joueursRestants) * 4;
+				break;
+			case 3:
+				// PRESIDENT, NEUTRE, TROUDUC
+				indexRole = (this.getNombreJoueurs() - joueursRestants) * 2;
+				break;
+			case 4:
+				// PRESIDENT, VICE_PRESIDENT, VICE_TROUDUC, TROUDUC
+				indexRole = (joueursRestants >= 3) ? this.getNombreJoueurs() - joueursRestants : this.getNombreJoueurs() - joueursRestants + 1;
+				break;
+			case 5:
+				// PRESIDENT, VICE_PRESIDENT, NEUTRE, VICE_TROUDUC, TROUDUC
+				indexRole = this.getNombreJoueurs() - joueursRestants;
+				break;
+			case 6:
+				// PRESIDENT, VICE_PRESIDENT, NEUTRE, NEUTRE, VICE_TROUDUC, TROUDUC
+				indexRole = (joueursRestants >= 4) ? this.getNombreJoueurs() - joueursRestants : this.getNombreJoueurs() - joueursRestants - 1;
+				break;
+			}
+		
+			joueur.setRole(Lists.newArrayList(Role.values()).get(indexRole));
 		}
 	}
 	
