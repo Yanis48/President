@@ -8,12 +8,8 @@ public class Joueur {
 	private Deck deck;
 	
 	public Joueur(String nom) {
-		this(nom, Role.NEUTRE);
-	}
-	
-	public Joueur(String nom, Role role) {
 		this.nom = nom;
-		this.role = role;
+		this.role = Role.NEUTRE;
 		this.deck = new Deck();
 	}
 	

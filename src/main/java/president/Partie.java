@@ -112,11 +112,13 @@ public class Partie {
 	
 	private void initPremierJoueur() {
 		joueurs.forEach(joueur -> {
+			// Si c'est la première partie, le joueur qui possède la dame de coeur a la main
 			if (this.isPremierePartie()) {
 				Carte dameCoeur = new Carte(Valeur.DAME, Couleur.COEUR);
 				if (joueur.getDeck().contient(dameCoeur)) {
 					this.joueurMain = joueur;
 				}
+			// Sinon, le joueur ayant le rôle TROUDUC a la main
 			} else {
 				if (joueur.getRole().equals(Role.TROUDUC)) {
 					this.joueurMain = joueur;
@@ -152,7 +154,7 @@ public class Partie {
 				}
 			// Si le joueur n'est plus actif dans la partie
 			} else {
-				// Si le joueur est le président, le joueur suivant a la main
+				// Si le joueur a réinitialisé la pile, le joueur suivant a la main
 				if (this.pile.isVide()) {
 					this.joueurMain = (j == this.joueursPartie.size()) ? this.joueursPartie.get(0) : this.joueursPartie.get(j);
 				} else if (j == this.joueursPartie.size()) {
@@ -215,12 +217,16 @@ public class Partie {
 			
 			while (itCartes.hasNext() && !found) {
 				carte = itCartes.next();
+				
 				if (carte.getValeur().getSymbole().equals(valeurCarte)) {
 					foundCount += 1;
 					cartes.add(carte);
+					
 					if (foundCount == this.mode.getId()) {
 						VerificateurCarte verif = new VerificateurCarte(this.pile, this.mode, this.derniereCartePlacee, cartes);
 						verif.verifier();
+						
+						// Si la carte peut être placée
 						if (verif.isValide()) {
 							found = true;
 							this.derniereCartePlacee = carte;
@@ -275,8 +281,9 @@ public class Partie {
 	
 	private void donnerRole(Joueur joueur) {
 		int joueursRestants = this.joueursPartie.size();
-		int indexRole = 0;
+		int indexRole;
 		
+		// Si la dernière carte du joueur a pour valeur 2
 		if (this.derniereCartePlacee.getValeur().equals(Valeur.DEUX)) {
 			indexRole = this.getNombreJoueurs() - this.decksFinisPar2 - 1;
 			this.decksFinisPar2++;
