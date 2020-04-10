@@ -5,8 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
-import com.google.common.collect.Lists;
-
 import president.carte.Carte;
 import president.carte.Couleur;
 import president.carte.Valeur;
@@ -22,6 +20,8 @@ public class Partie {
 	private Paquet paquet;
 	private Pile pile;
 	private boolean premierePartie;
+	private Role[] roles;
+	private int decksFinisPar2;
 	private Joueur joueurMain;
 	private Mode mode = Mode.SIMPLE;
 	private Carte derniereCartePlacee;
@@ -42,6 +42,9 @@ public class Partie {
 		}
 		// Copie de tous les joueurs dans les joueurs actifs de la partie
 		this.joueursPartie.addAll(joueurs);
+		
+		// Initialisation des rôles à répartir
+		this.roles = RepartitionRoles.REPARTITION_ROLES[this.getNombreJoueurs() - 2];
 		
 		// Mélange et distribution du paquet
 		this.getPaquet().melanger();
@@ -131,7 +134,7 @@ public class Partie {
 			
 			// S'il ne reste qu'un seul joueur dans la partie
 			if (this.joueursPartie.size() == 1) {
-				this.joueursPartie.get(0).setRole(Role.TROUDUC);
+				this.donnerRole(this.joueursPartie.get(0));
 				return;
 			}
 			
@@ -150,7 +153,7 @@ public class Partie {
 			// Si le joueur n'est plus actif dans la partie
 			} else {
 				// Si le joueur est le président, le joueur suivant a la main
-				if (joueur.getRole() == Role.PRESIDENT) {
+				if (this.pile.isVide()) {
 					this.joueurMain = (j == this.joueursPartie.size()) ? this.joueursPartie.get(0) : this.joueursPartie.get(j);
 				} else if (j == this.joueursPartie.size()) {
 					j = 0;
@@ -272,41 +275,24 @@ public class Partie {
 	
 	private void donnerRole(Joueur joueur) {
 		int joueursRestants = this.joueursPartie.size();
+		int indexRole = 0;
+		
+		if (this.derniereCartePlacee.getValeur().equals(Valeur.DEUX)) {
+			indexRole = this.getNombreJoueurs() - this.decksFinisPar2 - 1;
+			this.decksFinisPar2++;
+		} else {
+			indexRole = this.getNombreJoueurs() - joueursRestants - this.decksFinisPar2;
+		}
+		
+		joueur.setRole(this.roles[indexRole]);
 		
 		// Si le joueur est le premier à finir
 		if (this.getNombreJoueurs() - joueursRestants == 0) {
-			joueur.setRole(Role.PRESIDENT);
-			this.pile.reinitialiser();
-			System.out.println(Messages.INFO_PILE_RESET);
-		} else {
-			int indexRole = 0;
-			
-			// TODO optimiser ce code
-			
-			switch (this.getNombreJoueurs()) {
-			case 2:
-				// PRESIDENT, TROUDUC
-				indexRole = (this.getNombreJoueurs() - joueursRestants) * 4;
-				break;
-			case 3:
-				// PRESIDENT, NEUTRE, TROUDUC
-				indexRole = (this.getNombreJoueurs() - joueursRestants) * 2;
-				break;
-			case 4:
-				// PRESIDENT, VICE_PRESIDENT, VICE_TROUDUC, TROUDUC
-				indexRole = (joueursRestants >= 3) ? this.getNombreJoueurs() - joueursRestants : this.getNombreJoueurs() - joueursRestants + 1;
-				break;
-			case 5:
-				// PRESIDENT, VICE_PRESIDENT, NEUTRE, VICE_TROUDUC, TROUDUC
-				indexRole = this.getNombreJoueurs() - joueursRestants;
-				break;
-			case 6:
-				// PRESIDENT, VICE_PRESIDENT, NEUTRE, NEUTRE, VICE_TROUDUC, TROUDUC
-				indexRole = (joueursRestants >= 4) ? this.getNombreJoueurs() - joueursRestants : this.getNombreJoueurs() - joueursRestants - 1;
-				break;
+			// Si la pile n'est pas déjà réinitialisée par la valeur de la carte
+			if (!this.derniereCartePlacee.getValeur().equals(Valeur.DEUX)) {
+				this.pile.reinitialiser();
+				System.out.println(Messages.INFO_PILE_RESET);
 			}
-		
-			joueur.setRole(Lists.newArrayList(Role.values()).get(indexRole));
 		}
 	}
 	

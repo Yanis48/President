@@ -19,7 +19,6 @@ public class President {
 			System.exit(0);
 		}
 		
-		// TODO si un joueur finit par un 2, il est trouduc
 		// TODO ajout des jokers avec methode choisirValeurJoker()
 		// TODO support de plusieurs parties à la suite
 		// TODO règles du jeu
