@@ -21,7 +21,7 @@ public class President {
 			
 			break;
 		case 1:
-			System.out.println(Messages.QUITTER);
+			Messages.afficher(Messages.QUITTER);
 			System.exit(0);
 		}
 		
@@ -31,7 +31,7 @@ public class President {
 	
 	@SuppressWarnings("resource")
 	private static int afficherMenu() {
-		System.out.println(Messages.BIENVENUE);
+		Messages.afficher(Messages.BIENVENUE);
 		System.out.println();
 		System.out.println("[0: Nouvelle partie] [1: Quitter]");
 		System.out.println();
@@ -62,7 +62,7 @@ public class President {
 			return nombre;
 		}
 		
-		System.out.println(Messages.ERREUR_NOMBRE_PARTIES);
+		Messages.afficher(Messages.ERREUR_NOMBRE_PARTIES);
 		return choisirNombreParties();
 	}
 }

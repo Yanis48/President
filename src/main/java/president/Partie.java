@@ -73,7 +73,7 @@ public class Partie {
 		int nombre = scanner.nextInt(Character.MAX_RADIX);
 		
 		if ((nombre < 2) || (nombre > 6)) {
-			System.out.println(Messages.ERREUR_NOMBRE_JOUEURS);
+			Messages.afficher(Messages.ERREUR_NOMBRE_JOUEURS);
 			this.initNombreJoueurs();
 		} else {
 			nombreJoueurs = nombre;
@@ -100,7 +100,7 @@ public class Partie {
 	
 	private boolean isNomValide(String nom) {
 		if (nom.length() > 8 || nom.isBlank()) {
-			System.out.println(Messages.ERREUR_NOM_JOUEUR);
+			Messages.afficher(Messages.ERREUR_NOM_JOUEUR);
 			return false;
 		}
 		return true;
@@ -109,7 +109,7 @@ public class Partie {
 	private boolean isNomUnique(String nom) {
 		for (Joueur joueur : joueurs) {
 			if (joueur.getNom().equals(nom)) {
-				System.out.println(Messages.ERREUR_NOM_PAS_UNIQUE);
+				Messages.afficher(Messages.ERREUR_NOM_PAS_UNIQUE);
 				return false;
 			}
 		}
@@ -179,7 +179,7 @@ public class Partie {
 			donneur.getDeck().enleverCarte(carte);
 		}
 		
-		System.out.println("[INFO] " + donneur.getNom() + " a donné " + nombre + " carte(s) à " + receveur.getNom() + ".");
+		Messages.afficher(Messages.INFO_CARTES_DONNEES, donneur.getNom(), nombre, receveur.getNom());
 	}
 	
 	@SuppressWarnings("resource")
@@ -189,7 +189,7 @@ public class Partie {
 		
 		// Afficher le deck du donneur
 		System.out.println();
-		System.out.println("Deck de " + donneur.getNom());
+		Messages.afficher(Messages.DECK_JOUEUR, donneur.getNom());
 		donneur.getDeck().afficher();
 		System.out.println();
 		
@@ -215,12 +215,12 @@ public class Partie {
 			}
 			
 			if (!found) {
-				System.out.println(Messages.ERREUR_PAS_DANS_DECK);
+				Messages.afficher(Messages.ERREUR_PAS_DANS_DECK);
 				i--;
 			}
 		}
 		
-		System.out.println("[INFO] " + donneur.getNom() + " a donné " + nombre + " carte(s) à " + receveur.getNom() + ".");
+		Messages.afficher(Messages.INFO_CARTES_DONNEES, donneur.getNom(), nombre, receveur.getNom());
 	}
 	
 	private void toursJoueurs() {
@@ -268,20 +268,20 @@ public class Partie {
 		// Vérifier si tous les joueurs ont passé leur tour depuis la dernière carte posée
 		if (this.nombreToursPasses == this.joueursPartie.size() - 1) {
 			this.pile.reinitialiser();
-			System.out.println(Messages.INFO_PILE_RESET);
+			Messages.afficher(Messages.INFO_PILE_RESET);
 		}
 		System.out.println();
 		
 		// Si la pile n'est pas vide, afficher la pile
 		if (!this.pile.isVide()) {
-			System.out.println("Pile");
+			Messages.afficher(Messages.PILE);
 			this.pile.afficher();
 			System.out.println();
 			System.out.println();
 		}
 		
 		// Afficher le deck du joueur
-		System.out.println("Deck de " + joueur.getNom());
+		Messages.afficher(Messages.DECK_JOUEUR, joueur.getNom());
 		joueur.getDeck().afficher();
 		System.out.println();
 		
@@ -306,7 +306,7 @@ public class Partie {
 				found = true;
 				this.derniereCartePlacee = null;
 				this.nombreToursPasses += 1;
-				System.out.println("[INFO] " + joueur.getNom() + " a passé son tour.");
+				Messages.afficher(Messages.INFO_TOUR_PASSE, joueur.getNom());
 			}
 			
 			Iterator<Carte> itCartes = joueur.getDeck().getCartes().iterator();
@@ -339,7 +339,7 @@ public class Partie {
 							
 							if (verif.isPileReset()) {
 								this.pile.reinitialiser();
-								System.out.println(Messages.INFO_PILE_RESET);
+								Messages.afficher(Messages.INFO_PILE_RESET);
 								this.joueurMain = joueur;
 							}
 						} else {
@@ -350,14 +350,14 @@ public class Partie {
 			}
 			
 			if (!found) {
-				System.out.println(messageErreur);
+				Messages.afficher(messageErreur);
 			}
 		}
 		
 		// Si le deck du joueur est vide, lui donner un rôle et le retirer des joueurs actifs
 		if (joueur.getDeck().isVide()) {
 			this.donnerRole(joueur);
-			System.out.println("[INFO] " + joueur.getNom() + " a terminé la partie en étant " + joueur.getRole());
+			Messages.afficher(Messages.INFO_FIN_JOUEUR, joueur.getNom(), joueur.getRole());
 			this.joueursPartie.remove(joueur);
 		}
 	}
@@ -374,7 +374,7 @@ public class Partie {
 				return mode;
 			}
 		}
-		System.out.println(Messages.ERREUR_MODE_CARTES);
+		Messages.afficher(Messages.ERREUR_MODE_CARTES);
 		return this.choisirMode();
 	}
 	
@@ -397,17 +397,17 @@ public class Partie {
 			// Si la pile n'est pas déjà réinitialisée par la valeur de la carte
 			if (!this.derniereCartePlacee.getValeur().equals(Valeur.DEUX)) {
 				this.pile.reinitialiser();
-				System.out.println(Messages.INFO_PILE_RESET);
+				Messages.afficher(Messages.INFO_PILE_RESET);
 			}
 		}
 	}
 	
 	private void finirPartie() {
-		System.out.println(Messages.INFO_FIN_PARTIE);
+		Messages.afficher(Messages.INFO_FIN_PARTIE);
 		
 		// Affichage des rôles des joueurs
 		joueurs.forEach(joueur -> {
-			System.out.println(joueur.getNom() + " : " + joueur.getRole());
+			Messages.afficher(Messages.INFO_ROLE_JOUEUR, joueur.getNom(), joueur.getRole());
 		});
 	}
 	

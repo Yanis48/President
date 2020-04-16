@@ -27,7 +27,7 @@ public class Paquet extends Pile {
 	
 	public void melanger() {
 		Collections.shuffle(this.cartes);
-		System.out.println(Messages.INFO_MELANGE);
+		Messages.afficher(Messages.INFO_MELANGE);
 		
 		/*
 		 * DEBUG
@@ -58,7 +58,7 @@ public class Paquet extends Pile {
 			}
 		}
 		
-		System.out.println(Messages.INFO_DISTRIBUE);
+		Messages.afficher(Messages.INFO_DISTRIBUE);
 		
 		/*
 		 * DEBUG

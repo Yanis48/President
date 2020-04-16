@@ -13,9 +13,20 @@ public class Messages {
 	public static final String ERREUR_PAS_DANS_DECK = "[ERREUR] La carte choisie n'est pas dans le deck du joueur !";
 	public static final String ERREUR_INFERIEURE = "[ERREUR] La carte doit être supérieure ou égale à la précédente !";
 	public static final String ERREUR_PAS_EGALE = "[ERREUR] La carte choisie doit être égale à la précédente !";
-
+	
 	public static final String INFO_MELANGE = "[INFO] Le paquet a été mélangé.";
 	public static final String INFO_DISTRIBUE = "[INFO] Le paquet a été distribué.";
+	public static final String INFO_CARTES_DONNEES = "[INFO] %1s a donné %1s carte(s) à %1s.";
 	public static final String INFO_PILE_RESET = "[INFO] La pile a été réinitialisée.";
+	public static final String INFO_TOUR_PASSE = "[INFO] %1s a passé son tour.";
+	public static final String INFO_FIN_JOUEUR = "[INFO] %1s a terminé la partie en étant %1s.";
 	public static final String INFO_FIN_PARTIE = "[INFO] La partie est terminée !";
+	public static final String INFO_ROLE_JOUEUR = "[INFO] %1s est %1s";
+	
+	public static final String PILE = "Pile";
+	public static final String DECK_JOUEUR = "Deck de %1s";
+	
+	public static void afficher(String message, Object... args) {
+		System.out.println(String.format(message, args));
+	}
 }
