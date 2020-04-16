@@ -1,6 +1,7 @@
 package president;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
@@ -53,6 +54,11 @@ public class Partie {
 		// Détermination du joueur à avoir la main
 		this.initPremierJoueur();
 		
+		if (!this.isPremierePartie()) {
+			// Echange des cartes en fonction des rôles
+			this.echangerCartes();
+		}
+		
 		// Lancement des tours des joueurs
 		this.toursJoueurs();
 		
@@ -64,7 +70,7 @@ public class Partie {
 	private void initNombreJoueurs() {
 		System.out.print("Nombre de joueurs : ");
 		Scanner scanner = new Scanner(System.in);
-		int nombre = scanner.nextInt();
+		int nombre = scanner.nextInt(Character.MAX_RADIX);
 		
 		if ((nombre < 2) || (nombre > 6)) {
 			System.out.println(Messages.ERREUR_NOMBRE_JOUEURS);
@@ -75,7 +81,7 @@ public class Partie {
 	}
 	
 	@SuppressWarnings("resource")
-	private void initJoueurs() {		        
+	private void initJoueurs() {
 		Scanner scanner = new Scanner(System.in);
 		String nom;
 		
@@ -127,6 +133,96 @@ public class Partie {
 		});
 	}
 	
+	private void echangerCartes() {
+		Joueur president = null;
+		Joueur vicePresident = null;
+		Joueur viceTrouduc = null;
+		Joueur trouduc = null;
+		
+		for (Joueur joueur : this.joueursPartie) {
+			switch (joueur.getRole()) {
+			case PRESIDENT:
+				president = joueur;
+				break;
+			case VICE_PRESIDENT:
+				vicePresident = joueur;
+				break;
+			case VICE_TROUDUC:
+				viceTrouduc = joueur;
+				break;
+			case TROUDUC:
+				trouduc = joueur;
+				break;
+			case NEUTRE:
+			default:
+				break;
+			}
+		}
+		
+		this.donnerMeilleuresCartes(trouduc, president, 2);
+		this.choisirCartesADonner(president, trouduc, 2);
+		if (this.getNombreJoueurs() >= 4) {
+			this.donnerMeilleuresCartes(viceTrouduc, vicePresident, 1);
+			this.choisirCartesADonner(vicePresident, viceTrouduc, 1);
+		}
+	}
+	
+	private void donnerMeilleuresCartes(Joueur donneur, Joueur receveur, int nombre) {
+		for (int i = 0; i < nombre; i++) {
+			// La meilleure carte est la dernière carte du deck
+			int index = donneur.getDeck().getCartes().size() - 1;
+			Carte carte = donneur.getDeck().getCarte(index);
+			
+			receveur.getDeck().ajouterCarte(carte);
+			// Tri du deck du receveur
+			receveur.getDeck().getCartes().sort(Comparator.comparing(Carte::getValeur));
+			donneur.getDeck().enleverCarte(carte);
+		}
+		
+		System.out.println("[INFO] " + donneur.getNom() + " a donné " + nombre + " carte(s) à " + receveur.getNom() + ".");
+	}
+	
+	@SuppressWarnings("resource")
+	private void choisirCartesADonner(Joueur donneur, Joueur receveur, int nombre) {
+		Scanner scanner = new Scanner(System.in);
+		String valeurCarte;
+		
+		// Afficher le deck du donneur
+		System.out.println();
+		System.out.println("Deck de " + donneur.getNom());
+		donneur.getDeck().afficher();
+		System.out.println();
+		
+		for (int i = 0; i < nombre; i++) {
+			boolean found = false;
+			
+			System.out.println();
+			System.out.print("Carte à donner : ");
+			valeurCarte = scanner.nextLine();
+			
+			// Vérifier si la carte choisie est dans le deck du donneur
+			for (Carte carte : donneur.getDeck().getCartes()) {
+				if (carte.getValeur().getSymbole().equals(valeurCarte)) {
+					
+					receveur.getDeck().ajouterCarte(carte);
+					// Tri du deck du receveur
+					receveur.getDeck().getCartes().sort(Comparator.comparing(Carte::getValeur));
+					donneur.getDeck().enleverCarte(carte);
+					
+					found = true;
+					break;
+				}
+			}
+			
+			if (!found) {
+				System.out.println(Messages.ERREUR_PAS_DANS_DECK);
+				i--;
+			}
+		}
+		
+		System.out.println("[INFO] " + donneur.getNom() + " a donné " + nombre + " carte(s) à " + receveur.getNom() + ".");
+	}
+	
 	private void toursJoueurs() {
 		int j = this.joueursPartie.indexOf(this.joueurMain);
 		
@@ -136,7 +232,9 @@ public class Partie {
 			
 			// S'il ne reste qu'un seul joueur dans la partie
 			if (this.joueursPartie.size() == 1) {
-				this.donnerRole(this.joueursPartie.get(0));
+				Joueur dernierJoueur = this.joueursPartie.get(0);
+				this.donnerRole(dernierJoueur);
+				dernierJoueur.getDeck().reinitialiser();
 				return;
 			}
 			
@@ -208,6 +306,7 @@ public class Partie {
 				found = true;
 				this.derniereCartePlacee = null;
 				this.nombreToursPasses += 1;
+				System.out.println("[INFO] " + joueur.getNom() + " a passé son tour.");
 			}
 			
 			Iterator<Carte> itCartes = joueur.getDeck().getCartes().iterator();

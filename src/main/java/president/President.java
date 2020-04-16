@@ -9,10 +9,16 @@ public class President {
 		
 		switch (choix) {
 		case 0:
-			Partie partie = new Partie(true);
+			int nombreParties = choisirNombreParties();
 			
-			// Lancement de la partie
-			partie.lancer();
+			for (int i = 0; i < nombreParties; i++) {
+				// Seule la première itération est la première partie
+				Partie partie = new Partie(i == 0);
+				
+				// Lancement de la partie
+				partie.lancer();
+			}
+			
 			break;
 		case 1:
 			System.out.println(Messages.QUITTER);
@@ -20,7 +26,6 @@ public class President {
 		}
 		
 		// TODO ajout des jokers avec methode choisirValeurJoker()
-		// TODO support de plusieurs parties à la suite
 		// TODO règles du jeu
 	}
 	
@@ -44,5 +49,20 @@ public class President {
 		} while (choix < 0 || choix > 1);
 		
 		return choix;
+	}
+	
+	@SuppressWarnings("resource")
+	private static int choisirNombreParties() {
+		System.out.print("Nombre de parties : ");
+		Scanner scanner = new Scanner(System.in);
+		int nombre = scanner.nextInt(Character.MAX_RADIX);
+		
+		if (nombre > 0) {
+			System.out.println();
+			return nombre;
+		}
+		
+		System.out.println(Messages.ERREUR_NOMBRE_PARTIES);
+		return choisirNombreParties();
 	}
 }
