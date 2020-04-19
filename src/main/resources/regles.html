@@ -1,0 +1,39 @@
+<html>
+	<p>Le Président est un jeu de cartes se jouant de 2 à 6 joueurs. Le but du jeu est de se débarrasser de ses cartes le plus vite possible.</p>
+	
+	<h2>Lancement de la partie</h2>
+	<p>Un paquet de 52 cartes est distribué entre les joueurs de la partie, qui disposent donc d'un deck trié de la carte la plus faible à la carte la plus forte.</p>
+	<h3>Première partie</h3>
+	<p>Lors de la première partie, le joueur qui a la main est celui qui possède la <span style="text-decoration: underline;">dame de coeur</span>.</p>
+	<h3>Parties suivantes</h3>
+	<p>Lors des parties suivantes, le joueur qui a la main est le <span style="text-decoration: underline;">trouduc</span>.</p>
+	<p>Le trouduc donne ses 2 meilleures cartes au président, et le président donne 2 cartes de son choix au trouduc.</p>
+	<p>S'il y a au moins 4 joueurs, le vice-trouduc donne sa meilleure carte au vice-président, et le vice-président donne une carte de son choix au vice-trouduc.</p>
+
+	<h2>Déroulement de la partie</h2>
+	<p>Le joueur qui a la main choisit le mode de jeu, c'est-à-dire le nombre de cartes à placer : simple, double, triple ou quadruple.</p>
+	<p>Le joueur suivant doit alors placer, selon le mode, une ou des cartes ayant une valeur égale ou supérieure à la carte précédente.</p>
+	<p>Si les deux joueurs précédents ont placé des cartes égales, le joueur suivant ne peut placer qu'une carte égale à celles-ci.</p>
+	<p>Les tours continuent ainsi, jusqu'à ce que la pile soit réinitialisée. Dans ce cas, le dernier joueur à avoir posé une carte prend la main.</p>
+	<p>Si un joueur ne peut pas ou ne veut pas jouer lors de son tour, il devra choisir la valeur <span style="color: red;">0</span>.</p>
+	<p>Lorsqu'un joueur n'a plus de cartes dans son deck, il se voit attribuer un rôle.</p>
+
+	<h2>Réinitialisation de la pile</h2>
+	<p>La pile est réinitialisée dans les cas suivants :</p>
+	<ul>
+		<li>Un joueur pose une carte ayant la valeur 2</li>
+		<li>Un joueur pose un quadruple</li>
+		<li>Les 4 cartes de la même valeur ont été posées à la suite</li>
+		<li>Tous les joueurs ont passé leur tour</li>
+		<li>Un joueur est le premier à ne plus avoir de cartes dans son deck</li>
+	</ul>
+
+	<h2>Attribution des rôles</h2>
+	<ul>
+		<li>Le premier joueur à avoir fini son deck est le <span style="text-decoration: underline;">président</span>.</li>
+		<li>Le dernier joueur à avoir fini son deck est le <span style="text-decoration: underline;">trouduc</span>.</li>
+		<li>S'il y a au moins 4 joueurs, le deuxième joueur est le <span style="text-decoration: underline;">vice-président</span>, et l'avant-dernier joueur est le <span style="text-decoration: underline;">vice-trouduc</span>.</li>
+		<li>Les autres joueurs sont dits <span style="text-decoration: underline;">neutres</span>.</li>
+		<li>Si un joueur finit son deck avec une carte ayant la valeur 2, il devient trouduc.</li>
+	</ul>
+</html>

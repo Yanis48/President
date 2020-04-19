@@ -5,7 +5,19 @@ import java.util.Scanner;
 public class President {
 
 	public static void main(String[] args) {
-		int choix = afficherMenu();
+		Messages.afficher(Messages.BIENVENUE);
+		afficherMenu();
+		
+		// TODO ajout des jokers avec methode choisirValeurJoker()
+		// TODO système de révolution
+	}
+	
+	public static void afficherMenu() {
+		System.out.println();
+		System.out.println("[0: Nouvelle partie] [1: Quitter] [2: Règles]");
+		System.out.println();
+		
+		int choix = choisirBoutonMenu();
 		
 		switch (choix) {
 		case 0:
@@ -18,35 +30,31 @@ public class President {
 				// Lancement de la partie
 				partie.lancer();
 			}
-			
 			break;
+			
 		case 1:
 			Messages.afficher(Messages.QUITTER);
 			System.exit(0);
+			
+		case 2:
+			Regles.afficherRegles();
+			break;
 		}
-		
-		// TODO ajout des jokers avec methode choisirValeurJoker()
-		// TODO règles du jeu
 	}
 	
 	@SuppressWarnings("resource")
-	private static int afficherMenu() {
-		Messages.afficher(Messages.BIENVENUE);
-		System.out.println();
-		System.out.println("[0: Nouvelle partie] [1: Quitter]");
-		System.out.println();
-		
-		// Tant que le choix n'est pas égal à 0 ou 1, saisir le choix
+	private static int choisirBoutonMenu() {
 		int choix = 0;
-		do {
-			System.out.print("Choix : ");
-			Scanner scanner = new Scanner(System.in);
-			choix = scanner.nextInt(Character.MAX_RADIX);
-			
-			if (choix < 0 || choix > 1) {
-				System.out.println(Messages.ERREUR_CHOIX);
-			}
-		} while (choix < 0 || choix > 1);
+		
+		System.out.print("Choix : ");
+		Scanner scanner = new Scanner(System.in);
+		choix = scanner.nextInt(Character.MAX_RADIX);
+		
+		// Si le choix n'est pas égal à 0, 1 ou 2, recommencer la saisie
+		if (choix < 0 || choix > 2) {
+			Messages.afficher(Messages.ERREUR_CHOIX);
+			return choisirBoutonMenu();
+		}
 		
 		return choix;
 	}

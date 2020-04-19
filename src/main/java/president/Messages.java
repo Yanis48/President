@@ -3,8 +3,9 @@ package president;
 public class Messages {
 	public static final String BIENVENUE = "Bienvenue sur le jeu du Président !";
 	public static final String QUITTER = "Vous avez quitté le jeu du Président.";
+	public static final String REGLES = "Règles du Président";
 	
-	public static final String ERREUR_CHOIX = "[ERREUR] Le choix doit être égal à 0 ou 1 !";
+	public static final String ERREUR_CHOIX = "[ERREUR] Le choix doit être égal à 0, 1 ou 2 !";
 	public static final String ERREUR_NOMBRE_PARTIES = "[ERREUR] Le nombre de parties doit être supérieur à 0 !";
 	public static final String ERREUR_NOMBRE_JOUEURS = "[ERREUR] Le nombre de joueurs doit être compris entre 2 et 6 !";
 	public static final String ERREUR_NOM_JOUEUR = "[ERREUR] Le nom du joueur doit être compris entre 1 et 8 caractères !";
