@@ -11,7 +11,7 @@ import president.carte.Valeur;
 import president.joueur.Joueur;
 
 public class Paquet extends Pile {
-	private static final int NOMBRE_CARTES = 52;
+	private static final int NOMBRE_CARTES = 54;
 	private Partie partie;
 	
 	public Paquet(Partie partie) {
@@ -19,10 +19,18 @@ public class Paquet extends Pile {
 		
 		for (Valeur valeur : Valeur.values()) {
 			for (Couleur couleur : Couleur.values()) {
-				Carte carte = new Carte(valeur, couleur);
-				this.ajouterCarte(carte);
+				// Si la valeur est différente de JOKER et la couleur est différente de UNDEFINED
+				if (!valeur.equals(Valeur.JOKER) && !couleur.equals(Couleur.UNDEFINED)) {
+					Carte carte = new Carte(valeur, couleur);
+					this.ajouterCarte(carte);
+				}
 			}
 		}
+		
+		// Ajout de 2 jokers dans la pile
+		Carte joker = new Carte(Valeur.JOKER, Couleur.UNDEFINED);
+		this.ajouterCarte(joker);
+		this.ajouterCarte(joker);
 	}
 	
 	public void melanger() {

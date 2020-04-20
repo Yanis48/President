@@ -14,6 +14,8 @@ public class Messages {
 	public static final String ERREUR_PAS_DANS_DECK = "[ERREUR] La carte choisie n'est pas dans le deck du joueur !";
 	public static final String ERREUR_INFERIEURE = "[ERREUR] La carte doit être supérieure ou égale à la précédente !";
 	public static final String ERREUR_PAS_EGALE = "[ERREUR] La carte choisie doit être égale à la précédente !";
+	public static final String ERREUR_VALEUR_JOKER = "[ERREUR] La valeur choisie doit être différente du joker !";
+	public static final String ERREUR_VALEUR_INVALIDE = "[ERREUR] La valeur choisie est invalide !";
 	
 	public static final String INFO_MELANGE = "[INFO] Le paquet a été mélangé.";
 	public static final String INFO_DISTRIBUE = "[INFO] Le paquet a été distribué.";

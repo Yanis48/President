@@ -4,7 +4,8 @@ public enum Couleur {
 	PIQUE("-PIQUE"), //♠
 	COEUR("-COEUR"), //♥
 	TREFLE("-TREFLE"), //♣
-	CARREAU("-CARREAU"); //♦
+	CARREAU("-CARREAU"), //♦
+	UNDEFINED("");
 	
 	private String symbole;
 	

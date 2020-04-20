@@ -1,8 +1,10 @@
 package president;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import president.carte.Carte;
+import president.carte.Couleur;
 import president.carte.Valeur;
 import president.pile.Pile;
 
@@ -24,6 +26,8 @@ public class VerificateurCarte {
 	
 	public void verifier() {
 		int prevCarteIndex = this.pile.getCartes().size() - 1;
+		
+		this.verifierJoker();
 		
 		// Vérifier si la pile n'est pas vide
 		if (this.pile.getCartes().size() > 0) {
@@ -72,6 +76,42 @@ public class VerificateurCarte {
 		if (this.mode == Mode.QUADRUPLE) {
 			this.pileReset = true;
 		}
+	}
+	
+	/*
+	 * Vérifie si la valeur de la carte est un joker
+	 * Permet de saisir la valeur choisie en cas de succès
+	 */
+	private void verifierJoker() {
+		if (this.cartes.get(0).getValeur().equals(Valeur.JOKER)) {
+			Carte carte = new Carte(this.choisirValeurJoker(), Couleur.UNDEFINED);
+			
+			this.cartes.set(0, carte);
+		}
+	}
+	
+	@SuppressWarnings("resource")
+	private Valeur choisirValeurJoker() {
+		Scanner scanner = new Scanner(System.in);
+		System.out.print("Valeur choisie : ");
+		String symbole = scanner.nextLine();
+		
+		// Vérifier si la valeur choisie existe
+		for (Valeur valeur : Valeur.values()) {
+			if (valeur.getSymbole().equals(symbole)) {
+				
+				// Vérifier si la valeur choisie n'est pas le joker
+				if (!symbole.equals(Valeur.JOKER.getSymbole())) {
+					return valeur;
+				} else {
+					Messages.afficher(Messages.ERREUR_VALEUR_JOKER);
+					return this.choisirValeurJoker();
+				}
+			}
+		}
+		
+		Messages.afficher(Messages.ERREUR_VALEUR_INVALIDE);
+		return this.choisirValeurJoker();
 	}
 	
 	public boolean isValide() {

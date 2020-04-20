@@ -8,7 +8,6 @@ public class President {
 		Messages.afficher(Messages.BIENVENUE);
 		afficherMenu();
 		
-		// TODO ajout des jokers avec methode choisirValeurJoker()
 		// TODO système de révolution
 	}
 	

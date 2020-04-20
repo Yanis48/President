@@ -13,7 +13,8 @@ public enum Valeur {
 	DAME("D"),
 	ROI("R"),
 	AS("A"),
-	DEUX("2");
+	DEUX("2"),
+	JOKER("J");
 	
 	private String symbole;
 	

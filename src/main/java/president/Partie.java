@@ -317,7 +317,7 @@ public class Partie {
 			while (itCartes.hasNext() && !found) {
 				carte = itCartes.next();
 				
-				if (carte.getValeur().getSymbole().equals(valeurCarte)) {
+				if (carte.getValeur().getSymbole().equals(valeurCarte) || carte.getValeur().getSymbole().equals(Valeur.JOKER.getSymbole())) {
 					foundCount += 1;
 					cartes.add(carte);
 					
@@ -331,10 +331,22 @@ public class Partie {
 							this.derniereCartePlacee = carte;
 							this.nombreToursPasses = 0;
 							
-							// Enlever la carte du deck du joueur
-							cartes.forEach(c -> joueur.getDeck().enleverCarte(c));
+							// Enlever les cartes du deck du joueur
+							int cartesAEnlever = 0;
+							for (Carte c : cartes) {
+								if (cartesAEnlever <= this.mode.getId()) {
+									// Si le deck du joueur contient la carte, l'enlever du deck
+									if (joueur.getDeck().contient(c)) {
+										joueur.getDeck().enleverCarte(c);
+									// Sinon, enlever la dernière carte du deck, c'est-à-dire un joker
+									} else {
+										joueur.getDeck().enleverCarte(joueur.getDeck().getCarte(joueur.getDeck().getCartes().size() - 1));
+									}
+									cartesAEnlever++;
+								}
+							}
 							
-							// Ajouter la carte dans la pile
+							// Ajouter les cartes dans la pile
 							cartes.forEach(c -> this.pile.ajouterCarte(c));
 							
 							if (verif.isPileReset()) {
