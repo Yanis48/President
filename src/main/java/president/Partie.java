@@ -11,6 +11,7 @@ import president.carte.Couleur;
 import president.carte.Valeur;
 import president.joueur.Joueur;
 import president.joueur.Role;
+import president.pile.Deck;
 import president.pile.Paquet;
 import president.pile.Pile;
 
@@ -332,15 +333,20 @@ public class Partie {
 							this.nombreToursPasses = 0;
 							
 							// Enlever les cartes du deck du joueur
+							Deck deck = joueur.getDeck();
 							int cartesAEnlever = 0;
+							
 							for (Carte c : cartes) {
 								if (cartesAEnlever <= this.mode.getId()) {
 									// Si le deck du joueur contient la carte, l'enlever du deck
-									if (joueur.getDeck().contient(c)) {
-										joueur.getDeck().enleverCarte(c);
+									if (deck.contient(c)) {
+										deck.enleverCarte(c);
 									// Sinon, enlever la dernière carte du deck, c'est-à-dire un joker
 									} else {
-										joueur.getDeck().enleverCarte(joueur.getDeck().getCarte(joueur.getDeck().getCartes().size() - 1));
+										int indexDerniereCarte = deck.getCartes().size() - 1;
+										Carte derniereCarte = deck.getCarte(indexDerniereCarte);
+										
+										deck.enleverCarte(derniereCarte);
 									}
 									cartesAEnlever++;
 								}

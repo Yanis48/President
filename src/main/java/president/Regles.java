@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -50,6 +51,6 @@ public class Regles {
 		if (in == null) {
 			throw new IllegalArgumentException("Resource not found! " + path);
 		}
-		return CharStreams.toString(new InputStreamReader(in, "UTF-8"));
+		return CharStreams.toString(new InputStreamReader(in, StandardCharsets.UTF_8));
 	}
 }
