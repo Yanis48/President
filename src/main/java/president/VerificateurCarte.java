@@ -69,11 +69,11 @@ public class VerificateurCarte {
 	}
 	
 	/*
-	 * Vérifie si 4 cartes sont posées en même temps
+	 * Vérifie si au moins 4 cartes sont posées en même temps
 	 * Réinitialise la pile en cas de succès
 	 */
 	private void verifierQuadruple() {
-		if (this.mode == Mode.QUADRUPLE) {
+		if (this.mode.equals(Mode.QUADRUPLE) || this.mode.equals(Mode.QUINTUPLE) || this.mode.equals(Mode.SEXTUPLE)) {
 			this.pileReset = true;
 		}
 	}

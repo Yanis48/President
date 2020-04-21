@@ -8,7 +8,6 @@ import president.Partie;
 import president.carte.Carte;
 import president.carte.Couleur;
 import president.carte.Valeur;
-import president.joueur.Joueur;
 
 public class Paquet extends Pile {
 	private static final int NOMBRE_CARTES = 54;
@@ -27,7 +26,7 @@ public class Paquet extends Pile {
 			}
 		}
 		
-		// Ajout de 2 jokers dans la pile
+		// Ajout de 2 jokers dans le paquet
 		Carte joker = new Carte(Valeur.JOKER, Couleur.UNDEFINED);
 		this.ajouterCarte(joker);
 		this.ajouterCarte(joker);
@@ -36,13 +35,6 @@ public class Paquet extends Pile {
 	public void melanger() {
 		Collections.shuffle(this.cartes);
 		Messages.afficher(Messages.INFO_MELANGE);
-		
-		/*
-		 * DEBUG
-		 */
-		for (Carte carte : this.cartes) {
-			System.out.println(carte.getValeur() + " - " + carte.getCouleur());
-		}
 	}
 	
 	public void distribuer() {
@@ -67,13 +59,5 @@ public class Paquet extends Pile {
 		}
 		
 		Messages.afficher(Messages.INFO_DISTRIBUE);
-		
-		/*
-		 * DEBUG
-		 */
-		for (Joueur joueur : this.partie.getJoueurs()) {
-			joueur.getDeck().afficher();
-			System.out.println();
-		}
 	}
 }

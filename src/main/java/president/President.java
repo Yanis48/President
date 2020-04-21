@@ -13,7 +13,7 @@ public class President {
 	
 	public static void afficherMenu() {
 		System.out.println();
-		System.out.println("[0: Nouvelle partie] [1: Quitter] [2: Règles]");
+		Messages.afficher(Messages.MENU);
 		System.out.println();
 		
 		int choix = choisirBoutonMenu();
