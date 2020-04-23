@@ -2,6 +2,8 @@ package president;
 
 import java.util.Scanner;
 
+import president.gui.Regles;
+
 public class President {
 
 	public static void main(String[] args) {

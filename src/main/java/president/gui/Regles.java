@@ -1,4 +1,4 @@
-package president;
+package president.gui;
 
 import java.awt.BorderLayout;
 import java.io.IOException;
@@ -14,12 +14,19 @@ import javax.swing.WindowConstants;
 
 import com.google.common.io.CharStreams;
 
+import president.Messages;
+import president.President;
+
 public class Regles {
 	
 	public static void afficherRegles() {
 		JFrame frame = new JFrame(Messages.REGLES);
 		JPanel htmlPanel = new JPanel();
 		JPanel buttonPanel = new JPanel();
+		
+		frame.setLayout(new BorderLayout());
+		frame.add(BorderLayout.NORTH, htmlPanel);
+		frame.add(BorderLayout.SOUTH, buttonPanel);
 		
 		try {
 			String html = readResourceToString("/regles.html");
@@ -32,10 +39,6 @@ public class Regles {
 		JButton okButton = new JButton("Ok");
 		buttonPanel.add(okButton);
 		okButton.addActionListener(action -> frame.dispose());
-		
-		frame.setLayout(new BorderLayout());
-		frame.add("North", htmlPanel);
-		frame.add("South", buttonPanel);
 		
 		frame.pack();
 		frame.setVisible(true);

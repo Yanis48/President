@@ -23,7 +23,7 @@ public class Partie {
 	private Pile pile;
 	private boolean premierePartie;
 	private Role[] roles;
-	private int decksFinisPar2;
+	private int decksMalFinis;
 	private Joueur joueurMain;
 	private Mode mode = Mode.SIMPLE;
 	private Carte derniereCartePlacee;
@@ -402,10 +402,10 @@ public class Partie {
 		
 		// Si la dernière carte du joueur a pour valeur 2
 		if (this.derniereCartePlacee.getValeur().equals(Valeur.DEUX)) {
-			indexRole = this.getNombreJoueurs() - this.decksFinisPar2 - 1;
-			this.decksFinisPar2++;
+			indexRole = this.getNombreJoueurs() - this.decksMalFinis - 1;
+			this.decksMalFinis++;
 		} else {
-			indexRole = this.getNombreJoueurs() - joueursRestants - this.decksFinisPar2;
+			indexRole = this.getNombreJoueurs() - joueursRestants - this.decksMalFinis;
 		}
 		
 		joueur.setRole(this.roles[indexRole]);

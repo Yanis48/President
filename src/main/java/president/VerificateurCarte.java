@@ -83,10 +83,18 @@ public class VerificateurCarte {
 	 * Permet de saisir la valeur choisie en cas de succès
 	 */
 	private void verifierJoker() {
+		Carte carte = null;
+		
 		if (this.cartes.get(0).getValeur().equals(Valeur.JOKER)) {
-			Carte carte = new Carte(this.choisirValeurJoker(), Couleur.UNDEFINED);
-			
-			this.cartes.set(0, carte);
+			carte = new Carte(this.choisirValeurJoker(), Couleur.UNDEFINED);
+		} else {
+			carte = new Carte(this.cartes.get(0).getValeur(), Couleur.UNDEFINED);
+		}
+		
+		for (Carte c : this.cartes) {
+			if (c.getValeur().equals(Valeur.JOKER)) {
+				this.cartes.set(this.cartes.indexOf(c), carte);
+			}
 		}
 	}
 	
