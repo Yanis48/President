@@ -13,6 +13,7 @@ public class Messages {
 	public static final String ERREUR_MODE_CARTES = "[ERREUR] Le mode doit être compris entre 1 et 6 !";
 	public static final String ERREUR_PAS_DANS_DECK = "[ERREUR] La carte choisie n'est pas dans le deck du joueur !";
 	public static final String ERREUR_INFERIEURE = "[ERREUR] La carte doit être supérieure ou égale à la précédente !";
+	public static final String ERREUR_SUPERIEURE = "[ERREUR] La carte doit être inférieure ou égale à la précédente !";
 	public static final String ERREUR_PAS_EGALE = "[ERREUR] La carte choisie doit être égale à la précédente !";
 	public static final String ERREUR_VALEUR_JOKER = "[ERREUR] La valeur choisie doit être différente du joker !";
 	public static final String ERREUR_VALEUR_INVALIDE = "[ERREUR] La valeur choisie est invalide !";
@@ -21,6 +22,8 @@ public class Messages {
 	public static final String INFO_DISTRIBUE = "[INFO] Le paquet a été distribué.";
 	public static final String INFO_CARTES_DONNEES = "[INFO] %1s a donné %1s carte(s) à %1s.";
 	public static final String INFO_PILE_RESET = "[INFO] La pile a été réinitialisée.";
+	public static final String INFO_REVOLUTION_ON = "[INFO] La partie est maintenant en mode révolution.";
+	public static final String INFO_REVOLUTION_OFF = "[INFO] La partie n'est plus en mode révolution.";
 	public static final String INFO_TOUR_PASSE = "[INFO] %1s a passé son tour.";
 	public static final String INFO_FIN_JOUEUR = "[INFO] %1s a terminé la partie en étant %1s.";
 	public static final String INFO_FIN_PARTIE = "[INFO] La partie est terminée !";

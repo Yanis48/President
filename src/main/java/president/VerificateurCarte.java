@@ -15,6 +15,7 @@ public class VerificateurCarte {
 	private ArrayList<Carte> cartes;
 	private boolean valide = false;
 	private boolean pileReset = false;
+	private boolean revolution = false;
 	private String messageErreur = null;
 	
 	public VerificateurCarte(Pile pile, Mode mode, Carte derniereCartePlacee, ArrayList<Carte> cartes) {
@@ -24,38 +25,67 @@ public class VerificateurCarte {
 		this.cartes = cartes;
 	}
 	
-	public void verifier() {
+	public void verifier(boolean revolutionEnCours) {
 		int prevCarteIndex = this.pile.getCartes().size() - 1;
 		
 		this.verifierJoker();
 		
 		// Vérifier si la pile n'est pas vide
 		if (this.pile.getCartes().size() > 0) {
-			// Vérifier si la valeur de la carte est supérieure à la précédente
-			if (this.cartes.get(0).getValeur().compareTo(this.pile.getCartes().get(prevCarteIndex).getValeur()) > 0) {
+			// Vérifier si la valeur de la carte est inférieure (en mode révolution) ou supérieure à la précédente
+			if (revolutionEnCours ? this.isInferieure() : this.isSuperieure()) {
 				// Vérifier si les valeurs des 2 cartes précédentes ne sont pas égales
 				if (this.mode != Mode.SIMPLE || this.derniereCartePlacee == null || this.pile.getCartes().size() == 1 || !this.pile.getCartes().get(prevCarteIndex).getValeur().equals(this.pile.getCartes().get(prevCarteIndex - 1).getValeur())) {
 					this.valide = true;
-					this.verifierDeux();
+					if (revolutionEnCours) {
+						this.verifierTrois();
+					} else {
+						this.verifierDeux();
+					}
 				} else {
 					this.messageErreur = Messages.ERREUR_PAS_EGALE;
 				}
 			// Vérifier si la valeur de la carte est égale à la précédente
-			} else if (this.cartes.get(0).getValeur().compareTo(this.pile.getCartes().get(prevCarteIndex).getValeur()) == 0) {
+			} else if (this.isEgale()) {
 				this.valide = true;
-				this.verifierDeux();
+				
 				// Vérifier si les valeurs des 3 cartes précédentes sont égales
 				if (this.mode != Mode.SIMPLE || this.pile.getCartes().size() >= 3 && this.pile.getCartes().get(prevCarteIndex).getValeur().equals(this.pile.getCartes().get(prevCarteIndex - 1).getValeur()) && this.pile.getCartes().get(prevCarteIndex).getValeur().equals(this.pile.getCartes().get(prevCarteIndex - 2).getValeur())) {
 					this.pileReset = true;
 				}
 			} else {
-				this.messageErreur = Messages.ERREUR_INFERIEURE;
+				this.messageErreur = revolutionEnCours ? Messages.ERREUR_SUPERIEURE : Messages.ERREUR_INFERIEURE;
 			}
 		} else {
 			this.valide = true;
-			this.verifierDeux();
+			if (revolutionEnCours) {
+				this.verifierTrois();
+			} else {
+				this.verifierDeux();
+			}
 			this.verifierQuadruple();
 		}
+	}
+	
+	/*
+	 * Vérifie si la valeur de la carte posée est inférieure à la valeur de la carte précédente
+	 */
+	private boolean isInferieure() {
+		return this.cartes.get(0).getValeur().compareTo(this.pile.getCartes().get(this.pile.getCartes().size() - 1).getValeur()) < 0;
+	}
+	
+	/*
+	 * Vérifie si la valeur de la carte posée est supérieure à la valeur de la carte précédente
+	 */
+	private boolean isSuperieure() {
+		return this.cartes.get(0).getValeur().compareTo(this.pile.getCartes().get(this.pile.getCartes().size() - 1).getValeur()) > 0;
+	}
+	
+	/*
+	 * Vérifie si la valeur de la carte posée est égale à la valeur de la carte précédente
+	 */
+	private boolean isEgale() {
+		return this.cartes.get(0).getValeur().compareTo(this.pile.getCartes().get(this.pile.getCartes().size() - 1).getValeur()) == 0;
 	}
 	
 	/*
@@ -69,12 +99,23 @@ public class VerificateurCarte {
 	}
 	
 	/*
+	 * Vérifie si la valeur de la carte est égale à 3
+	 * Réinitialise la pile en cas de succès
+	 */
+	private void verifierTrois() {
+		if (this.cartes.get(0).getValeur().equals(Valeur.TROIS)) {
+			this.pileReset = true;
+		}
+	}
+	
+	/*
 	 * Vérifie si au moins 4 cartes sont posées en même temps
 	 * Réinitialise la pile en cas de succès
 	 */
 	private void verifierQuadruple() {
 		if (this.mode.equals(Mode.QUADRUPLE) || this.mode.equals(Mode.QUINTUPLE) || this.mode.equals(Mode.SEXTUPLE)) {
 			this.pileReset = true;
+			this.revolution = true;
 		}
 	}
 	
@@ -128,6 +169,10 @@ public class VerificateurCarte {
 	
 	public boolean isPileReset() {
 		return this.pileReset;
+	}
+	
+	public boolean isRevolution() {
+		return this.revolution;
 	}
 	
 	public String getMessageErreur() {

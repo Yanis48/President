@@ -26,6 +26,7 @@ public class Partie {
 	private int decksMalFinis;
 	private Joueur joueurMain;
 	private Mode mode = Mode.SIMPLE;
+	private boolean revolution;
 	private Carte derniereCartePlacee;
 	private int nombreToursPasses;
 	
@@ -324,7 +325,7 @@ public class Partie {
 					
 					if (foundCount == this.mode.getId()) {
 						VerificateurCarte verif = new VerificateurCarte(this.pile, this.mode, this.derniereCartePlacee, cartes);
-						verif.verifier();
+						verif.verifier(this.revolution);
 						
 						// Si la carte peut être placée
 						if (verif.isValide()) {
@@ -355,11 +356,23 @@ public class Partie {
 							// Ajouter les cartes dans la pile
 							cartes.forEach(c -> this.pile.ajouterCarte(c));
 							
+							// Si la pile doit être réinitialisée
 							if (verif.isPileReset()) {
 								this.pile.reinitialiser();
 								Messages.afficher(Messages.INFO_PILE_RESET);
 								this.joueurMain = joueur;
 							}
+							
+							// Si la partie doit être en mode révolution
+							if (verif.isRevolution() && !this.revolution) {
+								this.revolution = true;
+								Messages.afficher(Messages.INFO_REVOLUTION_ON);
+							// Si la partie ne doit plus être en mode révolution
+							} else if (verif.isRevolution() && this.revolution) {
+								this.revolution = false;
+								Messages.afficher(Messages.INFO_REVOLUTION_OFF);
+							}
+							
 						} else {
 							messageErreur = verif.getMessageErreur();
 						}
@@ -400,8 +413,8 @@ public class Partie {
 		int joueursRestants = this.joueursPartie.size();
 		int indexRole;
 		
-		// Si la dernière carte du joueur a pour valeur 2
-		if (this.derniereCartePlacee.getValeur().equals(Valeur.DEUX)) {
+		// Si la dernière carte du joueur a pour valeur 3 (en mode révolution) ou 2
+		if (this.derniereCartePlacee.getValeur().equals(this.revolution ? Valeur.TROIS : Valeur.DEUX)) {
 			indexRole = this.getNombreJoueurs() - this.decksMalFinis - 1;
 			this.decksMalFinis++;
 		} else {
@@ -413,7 +426,7 @@ public class Partie {
 		// Si le joueur est le premier à finir
 		if (this.getNombreJoueurs() - joueursRestants == 0) {
 			// Si la pile n'est pas déjà réinitialisée par la valeur de la carte
-			if (!this.derniereCartePlacee.getValeur().equals(Valeur.DEUX)) {
+			if (!this.derniereCartePlacee.getValeur().equals(this.revolution ? Valeur.TROIS : Valeur.DEUX)) {
 				this.pile.reinitialiser();
 				Messages.afficher(Messages.INFO_PILE_RESET);
 			}

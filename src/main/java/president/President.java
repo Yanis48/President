@@ -9,8 +9,6 @@ public class President {
 	public static void main(String[] args) {
 		Messages.afficher(Messages.BIENVENUE);
 		afficherMenu();
-		
-		// TODO système de révolution
 	}
 	
 	public static void afficherMenu() {
