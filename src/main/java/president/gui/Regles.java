@@ -1,6 +1,7 @@
 package president.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -10,23 +11,26 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
 import com.google.common.io.CharStreams;
 
 import president.Messages;
-import president.President;
 
 public class Regles {
 	
 	public static void afficherRegles() {
 		JFrame frame = new JFrame(Messages.REGLES);
 		JPanel htmlPanel = new JPanel();
+		JScrollPane scrollPane = new JScrollPane(htmlPanel);
 		JPanel buttonPanel = new JPanel();
 		
 		frame.setLayout(new BorderLayout());
-		frame.add(BorderLayout.NORTH, htmlPanel);
+		frame.getContentPane().setPreferredSize(new Dimension(900, 650));
+		frame.getContentPane().add(scrollPane);
 		frame.add(BorderLayout.SOUTH, buttonPanel);
+		scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 		
 		try {
 			String html = readResourceToString("/regles.html");
@@ -45,8 +49,6 @@ public class Regles {
 		frame.setResizable(false);
 		frame.setLocationRelativeTo(null);
 		frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		
-		President.afficherMenu();
 	}
 	
 	private static String readResourceToString(String path) throws IOException {

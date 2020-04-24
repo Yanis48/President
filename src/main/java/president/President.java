@@ -39,6 +39,8 @@ public class President {
 			Regles.afficherRegles();
 			break;
 		}
+		
+		afficherMenu();
 	}
 	
 	@SuppressWarnings("resource")
